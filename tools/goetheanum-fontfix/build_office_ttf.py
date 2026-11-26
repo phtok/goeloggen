@@ -5,8 +5,9 @@
 #   - Trio ‹Goetheanum Schrift›: Klar = Regular, Laut = Fett (Cmd+B),
 #     Leise = Kursiv (Cmd+I) — Namen, Stilbits und echte Gewichte kommen
 #     unverändert aus den Quell-OTF (440/680/265).
-#   - Eigene Familien: Goetheanum Schrift Ruhig / Deutlich, Goetheanum Icons,
-#     Goetheanum Pfeile — je ‹Regular›, im Namen wählbar.
+#   - Eigene Familien: Goetheanum Schrift Ruhig / Deutlich, Goetheanum Kursiv
+#     (Kursiv Klar, nur für Werktitel), Goetheanum Icons, Goetheanum Pfeile —
+#     je ‹Regular›, im Namen wählbar.
 # Eigene PostScript-/Unique-IDs. fsType = installierbar.
 # TTF bettet PowerPoint zuverlässig ein (OTF/CFF nicht).
 import os, sys, glob
@@ -29,11 +30,13 @@ JOBS = [
     ("Goetheanum-Schrift-v2.9-Laut.otf",     "trio",  "GoetheanumSchriftLaut",           None),
     ("Goetheanum-Icons-v2.9.otf",            "flach", "GoetheanumIconsOffice",           "Goetheanum Icons"),
     ("Goetheanum-Pfeile-v2.9.otf",           "flach", "GoetheanumPfeileOffice",          "Goetheanum Pfeile"),
+    # Kursive (Fassung 2.95): eigene Familie, ⌘I bleibt Leise (build_kursiv.py)
+    ("Goetheanum-Kursiv-v2.9-Klar.otf",      "flach", "GoetheanumKursivOffice",          "Goetheanum Kursiv"),
 ]
 
 # Design-Gewichte der flachen Schnitte (Schnitt-System v2.8; identisch zu
 # STAT/Webfonts). Das Trio behält seine Gewichte direkt aus der Quell-OTF.
-WEIGHTS = {"Ruhig": 350, "Deutlich": 580}
+WEIGHTS = {"Ruhig": 350, "Deutlich": 580, "Kursiv": 440}
 
 def otf_to_ttf(ft, max_err=1.0):
     glyphOrder = ft.getGlyphOrder(); gs = ft.getGlyphSet()
@@ -120,6 +123,7 @@ Im Schrift-Menue heissen sie:
                                  Leise ueber Kursiv/Cmd+I)
   Goetheanum Schrift Ruhig
   Goetheanum Schrift Deutlich
+  Goetheanum Kursiv             (nur fuer Werktitel im Fliesstext)
   Goetheanum Icons  und  Goetheanum Pfeile
 
 Fett und Kursiv zugleich gibt es nicht — die Kombination wuerde
@@ -151,8 +155,13 @@ def pack_zip():
     print("  Goetheanum-Office-TTF.zip (%d TTF + Beipackzettel + LIESMICH)" % len(members))
 
 def main():
+    # Aufruf ohne Argument baut alle; mit Argument nur die Quellen, deren Name
+    # es enthält (z. B. `Kursiv`) – die übrigen TTF bleiben byte-gleich.
+    nur = [a for a in sys.argv[1:] if not a.startswith("-")]
     os.makedirs(OUT, exist_ok=True)
     for src, mode, ps, family in JOBS:
+        if nur and not any(n in src for n in nur):
+            continue
         ft = TTFont(os.path.join(FONTS, src))
         otf_to_ttf(ft)
         setname(ft, mode, ps, family)

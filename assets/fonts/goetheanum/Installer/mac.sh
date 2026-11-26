@@ -2,7 +2,7 @@
 # Goetheanum-Schriften installieren (Mac)
 #
 # Entfernt alle früheren Goetheanum-Schriften und installiert die aktuelle
-# Fassung: das Office-Set (Goetheanum Schrift, Ruhig, Deutlich, Icons, Pfeile)
+# Fassung: das Office-Set (Goetheanum Schrift, Ruhig, Deutlich, Kursiv, Icons, Pfeile)
 # und Source Sans 3 (Adobe 3.052R, unverändert). Auf Wunsch dazu Goetheanum
 # Kyrillisch, Goetheanum Arabisch und die variable Schrift für die Gestaltung.
 # Alte Kopien von Source Sans 3 (auch die variable) werden ersetzt,
@@ -39,6 +39,7 @@ Office/GoetheanumSchriftLaut.ttf
 Office/GoetheanumSchriftLeise.ttf
 Office/GoetheanumSchriftRuhig.ttf
 Office/GoetheanumSchriftDeutlich.ttf
+Office/GoetheanumKursiv.ttf
 Office/GoetheanumIcons.ttf
 Office/GoetheanumPfeile.ttf
 Begleitschriften/SourceSans3-Regular.ttf
@@ -83,7 +84,8 @@ Begleitschriften/GoetheanumKyrillisch-Bold.ttf"
 Begleitschriften/GoetheanumArabisch-Regular.ttf
 Begleitschriften/GoetheanumArabisch-Bold.ttf"
 [ "$VARIABEL" = 1 ] && SCHRIFTEN="$SCHRIFTEN
-Variable/Goetheanum-Variabel-v$FASSUNG.otf"
+Variable/Goetheanum-Variabel-v$FASSUNG.otf
+Variable/Goetheanum-Kursiv-Variabel-v$FASSUNG.otf"
 
 melde() { printf '  %s\n' "$1"; }
 halt() { printf '\n  %s\n\n' "$1" >&2; rm -rf "${TMP:-}"; exit "$2"; }

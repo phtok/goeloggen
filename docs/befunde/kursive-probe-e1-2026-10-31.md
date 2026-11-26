@@ -299,3 +299,54 @@ Klar** für Web (`@font-face` ‹Goetheanum›, `font-style: italic`) und Office
 S01 neu fassen: ‹Kursiv nur für Werktitel im Fliesstext›. Vorher den
 Bold-Master vervollständigen (152 fehlende Glyphen) oder bei Chialab anfragen
 (Handlung nach aussen: Inhaber fragen).
+
+## Bau 2.95 (26. 11. 2026)
+
+Gebaut nach dem Entscheid oben. Skript
+`tools/goetheanum-fontfix/build_kursiv.py` (idempotent, dreimal gebaut,
+gleiche Prüfsumme). Die Probe-Dateien unter `Probe/` bleiben unverändert.
+
+| Datei | Inhalt |
+|---|---|
+| `Variable/Goetheanum-Kursiv-Variabel-v2.9.otf` | ‹Goetheanum Kursiv Variabel›, wght 190–725, sieben Instanzen, Standard Klar |
+| `Office/GoetheanumKursiv.ttf` | eigene Familie ‹Goetheanum Kursiv› (Kursiv Klar), ⌘I bleibt Leise |
+| `Webfonts/woff2/Goetheanum-Kursiv-v2.9-Klar.woff2` (47 KB), `.woff`, ohne Fassung `Goetheanum-Kursiv-Klar.*` | in `tokens.css` als ‹Goetheanum›, `font-style: italic`, 440 |
+| `Fonts/Goetheanum-Kursiv-v2.9-Klar.otf` | Bauquelle für Office und Web, nicht im Paket |
+
+**Bold-Master vervollständigt, nichts mehr fortgeschrieben.** Von den 152
+fehlenden Glyphen: 39 reine Komponenten (vom Regular), 109 aus der
+mitgelieferten `BoldItalic.woff2`. Die Probe hatte 21 davon (B, D, G und ihre
+Akzente, Listenzeichen ss06) fortgeschrieben, weil der Compiler in der woff2
+Konturen umsortiert und Startpunkte versetzt hatte; die Punkte sind dieselben.
+Die Fortschreibung lag bis 108 Einheiten neben der echten Zeichnung (D, G
+und B in Laut sichtbar schmaler). Ç und M.ss03 aus den Bold-Glyphen C,
+Cedille und der woff2 eingepasst; Jacute und Lslashcomb sind unerreichbar
+(kein Unicode, kein Feature, keine Komponente) und entfallen. **Chialab
+anfragen ist damit nicht mehr nötig.**
+
+**Gewicht.** I-Stamm je Instanz (Ziel): Flüstern 37,0 (36,8) · Leise 51,0
+(51,1) · Ruhig 68,0 (68,5) · Klar 83,5 (83,8) · Deutlich 112,0 (112,5) · Laut
+132,0 (131,9) · Schreien 137,0 (141,1). Schreien endet am Bold-Master (3 %
+leichter als die Rechnung): eine Variable kann nicht über ihre Master hinaus.
+
+**Zeichen.** 614 Zeichen. Ergänzt: ‐ ‑ (auf das Divis), ‒ (Divis-lang auf
+Ziffernbreite), Wortverbinder U+2060, Ǻ ǻ. Nicht übernommen: die
+umkreisten Ziffern und Buchstaben der Hausschrift (① …, Ⓐ …, 78 Zeichen; die
+Pro führt dieselben Formen als ss03–ss06), Kapitälchen und Mediävalziffern
+(fehlen der Quelle), zwei Altlasten im Privatbereich. Für die eine Rolle
+(Werktitel im Fliesstext) entbehrlich (G03).
+
+**Offen.** Das Kerning der Pro ist für das a ohne Fuss eingestellt; das a mit
+Fuss erbt es (Unterschied nur am Fuss rechts). Nachziehen, falls es im Satz
+auffällt.
+
+### Vorschlag S01 neu (dem Inhaber vorgelegt, nicht eingesetzt)
+
+Heute: ‹Keine echte Kursive; mehrere Ziffernsätze …›. Vorschlag:
+
+> Kursiv nur für Werktitel im Fliesstext (Goetheanum Kursiv Klar, im Web
+> `<cite>`); nie zur Betonung (G05: Laut), nicht für Zitate (Leise),
+> Fremdwörter, Lede oder Titel. Mehrere Ziffernsätze …
+
+Mit S01 ginge in `base.css` `cite{font-style:italic}` (heute Browser-Vorgabe)
+und in `typo-regeln.yaml` dieselbe Fassung.

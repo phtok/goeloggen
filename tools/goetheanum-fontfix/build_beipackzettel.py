@@ -102,7 +102,7 @@ txt(K,"Pfeile & Kompass: eigener Font ‹Goetheanum Pfeile›, Seite 5.",9.5,RX+
 
 # footer
 S.append(f'<line x1="{M}" y1="540" x2="{W-M}" y2="540" stroke="rgba(20,24,28,.10)"/>')
-txt(K,"Goetheanum Schriften Version 2.9 (Fassung 2.94) · Goetheanum Kommunikation, basierend auf Titillium (Urbino, SIL OFL).",9,M,557,"#737a80")
+txt(K,"Goetheanum Schriften Version 2.9 (Fassung 2.95) · Goetheanum Kommunikation, basierend auf Titillium (Urbino, SIL OFL).",9,M,557,"#737a80")
 txt(K,"Ausbau & Optimierung 2026 durch Philipp Tok. Piktogramme und Icons u. a. von Severin Geißler und Philipp Tok.",9,M,570,"#737a80")
 S.append("</svg>")
 open("/tmp/beipack_p1.svg","w").write("".join(S))
@@ -309,10 +309,40 @@ cairosvg.svg2pdf(url="/tmp/beipack_p6.svg",write_to="/tmp/beipack_p6.pdf")
 cairosvg.svg2png(url="/tmp/beipack_p6.svg",write_to="/tmp/beipack_p6.png",output_width=1100)
 print("page6 rendered")
 
-# splice: alle sechs Seiten frisch gerendert (voll reproduzierbar, keine Fremd-PDF mehr)
+# --- Seite 7: Kursiv (Fassung 2.95) ---
+KUP=FD+"Goetheanum-Kursiv-v2.9-Klar.otf"; KU=L(KUP)
+KVF="assets/fonts/goetheanum/Variable/Goetheanum-Kursiv-Variabel-v2.9.otf"
+def kvarL(w):
+    ft=TTFont(KVF); instantiateVariableFont(ft,{"wght":w},inplace=True); return (ft,ft.getGlyphSet(),ft.getBestCmap(),ft["head"].unitsPerEm)
+def render7():
+    lw=360; card(M,128,lw,300)
+    txt(K,"Kursiv Klar",12,M+16,154,"#23272b"); rtxt(K,"Werktitel · 440",9.5,M+lw-16,154,"#a07a33")
+    txt(KU,"Philosophie der Freiheit",22,M+16,198,"#23272b")
+    for i,zeile in enumerate(["ABCDEFGHIJKLMNOPQRSTUVWXYZ","abcdefghijklmnopqrstuvwxyz","1234567890 & € @ % ß ä ö ü"]):
+        txt(KU,zeile,14,M+16,236+i*24,"#23272b")
+    cx=txt(K,"In der ",13,M+16,334,"#23272b"); cx=txt(KU,"Philosophie der Freiheit",13,cx,334,"#23272b")
+    txt(K," fragt Steiner",13,cx,334,"#23272b")
+    txt(K,"nach dem Ursprung des freien Handelns.",13,M+16,352,"#23272b")
+    txt(K,"Nur für Werktitel im Fliesstext. Betont wird mit Laut, nie kursiv.",9.5,M+16,410,"#737a80")
+    rx=M+lw+22; rw=360; card(rx,128,rw,300)
+    txt(K,"Kursiv Variabel",12,rx+16,154,"#23272b"); rtxt(K,"Achse 190–725",9.5,rx+rw-16,154,"#a07a33")
+    for i,(w,lab) in enumerate([(190,"Flüstern"),(265,"Leise"),(350,"Ruhig"),(440,"Klar"),(580,"Deutlich"),(680,"Laut"),(725,"Schreien")]):
+        yy=190+i*30
+        txt(kvarL(w),"Goetheanum kursiv",16,rx+16,yy,"#23272b")
+        rtxt(K,lab,8.5,rx+rw-16,yy,"#9aa1a7")
+    txt(K,"Für die Gestaltung. Gleiche Stufen wie die aufrechte Variable.",9.5,rx+16,410,"#737a80")
+kbpage("Kursiv","Goetheanum Kursiv – eigene Familie, nur für Werktitel im Fliesstext",render7,
+       "Office: Familie ‹Goetheanum Kursiv› (Cmd+I bleibt Leise). Web: ‹Goetheanum› mit font-style: italic. Gestaltung: ‹Goetheanum Kursiv Variabel›.",
+       "Stilsets: ss01 a ohne Fuss, ss02 gerades l. Aus Titillium Sans Pro Italic (Chialab, SIL OFL).")
+open("/tmp/beipack_p7.svg","w").write("".join(S))
+cairosvg.svg2pdf(url="/tmp/beipack_p7.svg",write_to="/tmp/beipack_p7.pdf")
+cairosvg.svg2png(url="/tmp/beipack_p7.svg",write_to="/tmp/beipack_p7.png",output_width=1100)
+print("page7 rendered")
+
+# splice: alle sieben Seiten frisch gerendert (voll reproduzierbar, keine Fremd-PDF mehr)
 from pypdf import PdfReader, PdfWriter
 w=PdfWriter()
-for n in (1,2,3,4,5,6):
+for n in (1,2,3,4,5,6,7):
     w.add_page(PdfReader(f"/tmp/beipack_p{n}.pdf").pages[0])
 out="assets/fonts/goetheanum/Beipackzettel-Goetheanum-Schriften.pdf"
 with open(out,"wb") as f: w.write(f)
