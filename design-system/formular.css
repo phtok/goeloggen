@@ -9,6 +9,7 @@
    Wurzel: <form class="formular" data-formular novalidate>.
    Teile:  [data-rolle="frequenz"|"stufen"|"zahlart"] (.seg) · .betrag-Raster
            · .eigen/.einheit (freier Betrag) · .kaestchen · .wachsen (bedingt)
+           · .gruppe (Feld + bedingter Raum ohne fieldset)
            · .fehler · .fehlerliste · .abschluss · .dank.
    Regeln: Felder, Label, Werte und Fehler in der Lese-Grotesk (base.css,
    § Schrift-Grenze); Felder 16 px (B03), jedes Ziel ≥44 px (B04), Felder und
@@ -28,6 +29,8 @@
 .formular .field input,.formular .field select{min-height:var(--tap)}   /* B04 auf allen Breiten */
 /* Felder einer Rasterzeile bleiben auf einer Linie, auch wenn eine Meldung umbricht. */
 .formular .formgrid .field{align-content:start}
+/* Feld samt bedingtem Raum ausserhalb eines fieldset: derselbe enge Abstand. */
+.formular .gruppe{display:grid;gap:var(--s3)}
 
 /* --- Wahl: jede Wahl wächst gleich – eine Kurve, eine Uhr ------------------
    Auf wächst mit --dauer-mittel, zu welkt mit --dauer-kurz. */

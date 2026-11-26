@@ -55,26 +55,31 @@ Dateien:
 - [ ] Anbindung: `GoetheanumFormular.init(form).absenden = function(daten){ return fetch(…) }`
       – Promise erfüllt: Dank erscheint; Promise verworfen: Knopf wird wieder frei.
       `daten` enthält `frequenz`, `betrag`, `waehrung`, `zahlart`,
-      `bescheinigung`, `vorname`, `nachname`, `email`, `zweck` und – nur mit
-      Bescheinigung – `strasse`, `plz`, `ort`, `land`.
+      `bescheinigung`, `vorname`, `nachname`, `email`, `zweck`; nur mit
+      Institution `organisation`; nur mit «Eigener Zweck» `zweck_eigen`;
+      nur mit Bescheinigung `strasse`, `plz`, `ort`, `land`.
 
 Reihenfolge der Felder (nicht umstellen):
 
 1. Fehlerzusammenfassung (verborgen bis zum ersten Absenden)
 2. Häufigkeit: Einmalig · Monatlich, Einmalig vorgewählt
-3. Betrag: Stufen, dazu «Anderer Betrag in CHF»
-4. Zahlungsart: TWINT · Karte · PayPal · QR-Rechnung, ohne Vorwahl
-5. Vorname · Name · E-Mail
-6. Kästchen «Spendenbescheinigung gewünscht» → Strasse und Hausnummer ·
+3. Währung: CHF · EUR, CHF vorgewählt (TWINT nur in CHF)
+4. Betrag: Stufen, dazu «Anderer Betrag in CHF»
+5. Zahlungsart: TWINT · Karte · PayPal · QR-Rechnung, ohne Vorwahl
+6. Kästchen «Ich spende für eine Institution» → Name der Institution
+7. Vorname · Name · E-Mail
+8. Kästchen «Spendenbescheinigung gewünscht» → Strasse und Hausnummer ·
    Postleitzahl · Ort · Land
-7. Spendenzweck
-8. Knopf «Jetzt 50&nbsp;CHF spenden», darunter der Gebührensatz
+9. Spendenzweck; «Eigener Zweck …» → Feld «Wofür ist Ihre Spende bestimmt?»
+10. Knopf «Jetzt 50&nbsp;CHF spenden», darunter Gebührensatz und
+    Datenschutz-Satz mit Link
 
 `autocomplete`:
 
 | Feld | Token |
 |---|---|
 | Anderer Betrag | `transaction-amount` |
+| Name der Institution | `organization` |
 | Vorname | `given-name` |
 | Name | `family-name` |
 | E-Mail | `email` |
@@ -96,12 +101,17 @@ Fehlertexte (im Markup als `data-leer`, `data-format`, `data-min-text`):
 - Geben Sie Strasse und Hausnummer ein.
 - Geben Sie die Postleitzahl ein.
 - Geben Sie den Ort ein.
+- Geben Sie den Namen der Institution ein.
+- Geben Sie an, wofür Ihre Spende bestimmt ist.
 
 Was das Backend liefern muss – **offen, bitte angeben:**
 
 - [ ] Zahlarten, die wirklich angeboten werden, je mit Hinweistext; TWINT-Höchstbetrag (heute 5&nbsp;000&nbsp;CHF angenommen)
 - [ ] Stufen je Häufigkeit und Vorwahl (heute einmalig 20–1000, Vorwahl 50; monatlich 10–200, Vorwahl 20)
-- [ ] Spendenzwecke (heute «Wo es am nötigsten ist», «Weihnachtsspende»)
+- [ ] Spendenzwecke (heute «Wo es am nötigsten ist», «Weihnachtsspende»,
+      «Anthroposophie weltweit», «Arbeit an den Mysteriendramen», «Eigener
+      Zweck …»; live steht dazu «Mitgliedsbeitrag EM Goetheanum»)
+- [ ] Währungen: live CHF und EUR; Konten gibt es auch in USD und GBP
 - [ ] Bescheinigung: ab welchem Betrag und wann sie kommt (Buchhaltung) – der Satz unter dem Knopf und der Dank richten sich danach
 - [ ] Gebühren je Zahlart, falls sie genannt werden sollen
 - [ ] Wortlaut der Bestätigungs-Mail

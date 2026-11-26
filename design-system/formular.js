@@ -3,7 +3,9 @@
    -----------------------------------------------------------------------------
    Logik ohne Backend für <form class="formular" data-formular>: Wahl in den
    .seg-Gruppen, Betrag im Knopf, freier Betrag, bedingte Adresse, Prüfung,
-   Fehlerzusammenfassung, Dank. Alle Texte stehen im Markup (data-*), damit
+   Fehlerzusammenfassung, Dank. Währung wählbar ([data-rolle="waehrung"]),
+   bedingte Felder allgemein: .wachsen#id öffnet ein Kästchen mit
+   aria-controls="id" oder eine Klappliste mit aria-controls und data-zeigt. Alle Texte stehen im Markup (data-*), damit
    das Formular übersetzbar bleibt; Kurven und Dauern liest das Skript aus den
    Bewegungs-Tokens (tokens.css) – weniger Bewegung nullt sie dort.
    Prüfen: beim Verlassen eines Felds, aber erst wenn der Klick vorbei ist –
@@ -35,7 +37,7 @@
     var $$ = function(s, r){ return [].slice.call((r || form).querySelectorAll(s)); };
     var rolle = function(n){ return $('[data-rolle="' + n + '"]'); };
 
-    var waehrung = form.dataset.waehrung || "CHF";
+    var waehrung = form.dataset.waehrung || "CHF", startWaehrung = waehrung;
     /* data-stufen-<frequenz>="20 50 100" · data-vorwahl-<frequenz>="50" */
     var STUFEN = {}, VORWAHL = {};
     Object.keys(form.dataset).forEach(function(k){
@@ -43,7 +45,7 @@
       var f = m[2].charAt(0).toLowerCase() + m[2].slice(1), v = form.dataset[k].trim().split(/\s+/).map(Number);
       if (m[1] === "stufen") STUFEN[f] = v; else VORWAHL[f] = v[0];
     });
-    var g = {frequenz:rolle("frequenz"), stufen:rolle("stufen"), betrag:rolle("betrag"), zahlart:rolle("zahlart"),
+    var g = {waehrung:rolle("waehrung"), frequenz:rolle("frequenz"), stufen:rolle("stufen"), betrag:rolle("betrag"), zahlart:rolle("zahlart"),
       bescheinigung:rolle("bescheinigung"), adresse:rolle("adresse"), fehlerliste:rolle("fehlerliste"),
       dank:rolle("dank"), knopf:rolle("absenden"), kosten:rolle("kosten"), hinweis:rolle("zahlart-hinweis"),
       vorlage:form.querySelector("template.dank-vorlage")};
@@ -95,6 +97,24 @@
       g.hinweis.textContent = t;
     }
 
+    /* Währung: Einheit an Legende, Feld und Knopf; Zahlarten mit
+       data-waehrungen="CHF" stehen nur in dieser Währung (TWINT). */
+    function waehrungSetzen(w){
+      waehrung = w;
+      if (g.waehrung) waehlen(g.waehrung, $('[data-rolle="waehrung"] [data-wert="' + w + '"]'));
+      $$("[data-waehrung-text]").forEach(function(x){ x.textContent = w; });
+      if (g.zahlart) $$("button", g.zahlart).forEach(function(b){
+        var nur = b.dataset.waehrungen, aus = !!nur && nur.split(" ").indexOf(w) < 0;
+        b.hidden = aus;
+        if (aus && stand.zahlart === b.dataset.wert) { stand.zahlart = null; b.setAttribute("aria-pressed", "false"); }
+      });
+      if (g.betrag && meldungen[g.betrag.id]) pruefen([g.betrag]);
+      knopfText(); zahlHinweis();
+    }
+    if (g.waehrung) g.waehrung.addEventListener("click", function(e){
+      var b = e.target.closest("button"); if (b && b.dataset.wert !== waehrung) waehrungSetzen(b.dataset.wert);
+    });
+
     /* Häufigkeit: neue Stufen, die Ziffern kommen gestaffelt. */
     function frequenzSetzen(f, sanft){
       stand.frequenz = f;
@@ -143,21 +163,27 @@
       if (stand.versucht) pruefen([g.zahlart]);
     });
 
-    /* Bescheinigung: erst dann wächst die Adresse heran. */
-    function adresseSetzen(){
-      if (!g.bescheinigung || !g.adresse) return;
-      var an = g.bescheinigung.checked, innen = g.adresse.querySelector(".innen");
-      g.adresse.classList.toggle("offen", an);
-      if (innen) innen.inert = !an;
-      if (!an) { $$("[required]", g.adresse).forEach(function(f){ feldFehler(f, ""); }); zusammenfassung(); }
+    /* Bedingte Felder: erst mit dem Auslöser wächst der Raum heran
+       (Bescheinigung → Adresse, Institution → Name, Eigener Zweck → Feld). */
+    var raeume = $$(".wachsen[id]").map(function(w){
+      return {w:w, an:form.querySelector('[aria-controls="' + w.id + '"]')};
+    }).filter(function(r){ return r.an; });
+    function offenIst(r){ return r.an.type === "checkbox" ? r.an.checked : r.an.value === r.an.dataset.zeigt; }
+    function zu(el){ return raeume.some(function(r){ return r.w.contains(el) && !offenIst(r); }); }
+    function aufdecken(){
+      raeume.forEach(function(r){
+        var an = offenIst(r), innen = r.w.querySelector(".innen");
+        r.w.classList.toggle("offen", an);
+        if (innen) innen.inert = !an;
+        if (!an) $$("[required]", r.w).forEach(function(f){ feldFehler(f, ""); });
+      });
+      zusammenfassung();
     }
-    if (g.bescheinigung) g.bescheinigung.addEventListener("change", adresseSetzen);
+    raeume.forEach(function(r){ r.an.addEventListener("change", aufdecken); });
 
     /* --- Prüfen: Sätze statt Signalwörter, Wortlaut aus dem Markup --------- */
     function reihe(){
-      return $$('[data-rolle="betrag"],[data-rolle="zahlart"],[required]').filter(function(el){
-        return !(g.adresse && g.adresse.contains(el) && !(g.bescheinigung && g.bescheinigung.checked));
-      });
+      return $$('[data-rolle="betrag"],[data-rolle="zahlart"],[required]').filter(function(el){ return !zu(el); });
     }
     function regel(el){
       var d = el.dataset;
@@ -222,7 +248,7 @@
         bescheinigung:!!(g.bescheinigung && g.bescheinigung.checked)};
       $$("input[name],select[name],textarea[name]").forEach(function(f){
         if (f.type === "checkbox") return;
-        if (g.adresse && g.adresse.contains(f) && !d.bescheinigung) return;
+        if (zu(f)) return;
         if (f !== g.betrag) d[f.name] = f.value.trim();
       });
       return d;
@@ -276,7 +302,8 @@
       g.knopf.hidden = false; g.knopf.disabled = false; if (g.kosten) g.kosten.hidden = false;
       stand.zahlart = null; stand.versucht = false;
       if (g.zahlart) $$("button", g.zahlart).forEach(function(b){ b.setAttribute("aria-pressed", "false"); });
-      adresseSetzen();
+      waehrungSetzen(startWaehrung);
+      aufdecken();
       reihe().concat($$("[required]")).forEach(function(el){ feldFehler(el, ""); });
       meldungen = {};
       zusammenfassung();
@@ -287,7 +314,8 @@
 
     var start = g.frequenz ? ((g.frequenz.querySelector('[aria-pressed="true"]') || g.frequenz.querySelector("button")).dataset.wert) : "einmalig";
     frequenzSetzen(start, false);
-    adresseSetzen();
+    waehrungSetzen(waehrung);
+    aufdecken();
 
     ctl.frequenz = frequenzSetzen;
     ctl.neu = neu;
