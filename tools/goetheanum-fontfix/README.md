@@ -115,6 +115,23 @@ python3 pack_release_zip.py
 python3 webfont_adressen.py
 ```
 
+## Fassung 2.96: Pfeile nach Entwurf 5 (26. 11. 2026)
+Pfeil-Schrift neu gezeichnet (dünn = Klar, fett = Laut, gebogene auch fett),
+Textschrift: zehn Pfeile in derselben Form, acht gebogene dazu. Form in
+`pfeilform.py` (eine Kontur je Pfeil, Bogen als Kurve, feste Punktfolge);
+`build_pfeile.py` (Ableitung aus dem Icon-Font) ist damit abgelöst. Befund
+`docs/befunde/pfeile-schrift-entwurf-2026-11-25.md` § Bau 2.96. Liest Fassung
+2.94/2.93 aus git, zweiter Lauf bitgleich.
+```bash
+python3 build_v296.py
+python3 konturrichtung.py ../../assets/fonts/goetheanum/Fonts/Goetheanum-Pfeile-v2.9.otf
+python3 proof_variable_axis.py --alle
+python3 build_beipackzettel.py             # aus der Repo-Wurzel, Seiten 2 und 5
+python3 build_office_ttf.py Schrift Pfeile
+python3 pack_release_zip.py
+python3 webfont_adressen.py
+```
+
 ## Verifikation
 ```bash
 pip install fontbakery

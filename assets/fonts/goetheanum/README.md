@@ -36,6 +36,21 @@ SIL OFL). Reparaturen und Begründung siehe
 
 Für Signaletik (z. B. das Kartentool) ist **Laut** der richtige Schnitt.
 
+## Neu in Fassung 2.96 (26. 11. 2026)
+
+Gleiche Dateinamen v2.9, intern Version 2.96 (aufrechte Schnitte, Variable,
+Pfeil-Schrift; die Kursive bleibt 2.95).
+
+- **Pfeile neu gezeichnet** (Entwurf 5): Arme 48°, flache Spitze, Schaft zum
+  Ende schlanker, mit der Fette deutlicher. In der Textschrift
+  `← ↑ → ↓ ↔ ↕ ↖ ↗ ↘ ↙`, neu dazu die gebogenen
+  `↱ ⬎ ↲ ⬑ ↰ ⬏ ↳ ⬐` (U+21B0–21B3, U+2B0E–2B11); 685 Codepunkte.
+- **‹Goetheanum Pfeile›** in derselben Form: Taste = Strich von Klar,
+  Umschalt = Laut. Gebogene Pfeile jetzt auch fett: Umschalt auf
+  `2 0 q e o ü s ö` (`" = Q E O Ü S Ö`, Schweizer Tastatur `è é` für ü ö).
+  Kompass unverändert. Befund `docs/befunde/pfeile-schrift-entwurf-2026-11-25.md`
+  § Bau 2.96.
+
 ## Neu in Fassung 2.95 (26. 11. 2026)
 
 - **Goetheanum Kursiv.** Aus Titillium Sans Pro Italic (Chialab, SIL OFL),

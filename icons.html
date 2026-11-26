@@ -284,15 +284,16 @@
     // je Taste liegen (unten tippen, oben mit ⇧):
     //  • Piktogramme  ‹ohne Text›  – Grundtaste, Icon-Font
     //  • Piktogramme  ‹mit Text›   – Umschalt-Glyphe (Grosstaste), Icon-Font
-    //  • Pfeile & Kompass          – eigener Font «Goetheanum Pfeile»; die vier
-    //    Richtungspfeile tragen den fetten Pfeil als ⇧-Zweitzeichen oben rechts.
+    //  • Pfeile & Kompass          – eigener Font «Goetheanum Pfeile»; gerade und
+    //    gebogene Pfeile tragen den fetten Pfeil als ⇧-Zweitzeichen oben rechts (2.96).
     var PFEIL_KEYS={ '6':'pfeil-hoch','t':'pfeil-links','u':'pfeil-rechts','h':'pfeil-runter',
       'y':'kompass-1','x':'kompass-2','c':'kompass-3','v':'kompass-4',
       '2':'pfeil-gebogen-1','0':'pfeil-gebogen-2','q':'pfeil-gebogen-3','e':'pfeil-gebogen-4',
       'o':'pfeil-gebogen-5','ü':'pfeil-gebogen-6','s':'pfeil-gebogen-7','ö':'pfeil-gebogen-8' };
     // Umkehrung slug → Taste, für die Kachel-Anzeige im Reiter «Pfeile & Kompass».
     var PFEIL_REV={}; Object.keys(PFEIL_KEYS).forEach(function(t){ PFEIL_REV[PFEIL_KEYS[t]]=t; });
-    var FAT_SHIFT={ '6':'&','t':'T','u':'U','h':'H' };   // fette Richtungspfeile (Umschalt)
+    var FAT_SHIFT={ '6':'&','t':'T','u':'U','h':'H',     // fette Pfeile (Umschalt)
+      '2':'"','0':'=','q':'Q','e':'E','o':'O','ü':'Ü','s':'S','ö':'Ö' };
     var ROWS=[['1','2','3','4','5','6','7','8','9','0','ß'],
               ['q','w','e','r','t','z','u','i','o','p','ü'],
               ['a','s','d','f','g','h','j','k','l','ö','ä'],

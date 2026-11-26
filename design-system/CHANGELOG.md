@@ -27,6 +27,16 @@ Rolle im Regelwerk, nicht im Paket; Angebot auf
 https://werkzeuge.goetheanum.ch/schriften.html#download, Seite
 https://werkzeuge.goetheanum.ch/schrift-serif-probe.html.
 
+## 26. November 2026 — Pfeile Fassung 2.96 (Schrift, Version des Systems unverändert)
+
+**Was.** Pfeile nach Entwurf 5 (Arme 48°, flache Spitze, Verlauf mit der
+Fette) in der ‹Goetheanum Pfeile› (dünn = Klar, fett = Laut, gebogene neu
+auch fett) und in der Textschrift; dort neu `↱ ⬎ ↲ ⬑ ↰ ⬏ ↳ ⬐`. **Warum.**
+Entscheid des Inhabers 26. 11. (‹ns em›). **Wirkung.** Gleiche Dateinamen;
+https://werkzeuge.goetheanum.ch/schriften.html auf 2.96, Beipackzettel S. 2
+und 5 nachgezogen. Befund `docs/befunde/pfeile-schrift-entwurf-2026-11-25.md`
+§ Bau 2.96.
+
 ## 26. November 2026 — Goetheanum Kursiv (Fassung 2.95; Schrift, Version des Systems unverändert)
 
 **Was.** `tokens.css` trägt ein zweites `@font-face` ‹Goetheanum› mit

@@ -155,8 +155,8 @@ row(ry+199,"Kurzziffern (onum) — Mediävalziffern im Fließtext",
     lambda y: stxt(K,HB["Klar"],"0123456789 · im Jahr 1923",18,RX+18,y,{"onum":True},"#23272b"))
 row(ry+242,"Kapitälchen (smcp / c2sc)",
     lambda y: stxt(K,HB["Klar"],"Goetheanum Dornach",18,RX+18,y,{"smcp":True},"#23272b"))
-row(ry+285,"Pfeile ← ↑ → ↓ ↔ ↕ ↖ ↗ ↘ ↙ — der Strich folgt dem Schnitt",
-    lambda y: txt(K,"Ausgang → Saal 12 ↑  ·  ← zurück",18,RX+18,y,"#23272b"))
+row(ry+285,"Pfeile ← ↑ → ↓ ↔ ↕ ↖ ↗ ↘ ↙ ↰ ↱ ↲ ↳ ⬏ ⬎ ⬑ ⬐ — der Strich folgt dem Schnitt",
+    lambda y: txt(K,"Ausgang → Saal 12 ↑  ·  ↱ Foyer  ·  ← zurück",18,RX+18,y,"#23272b"))
 
 # --- bottom: Strichvergleich (volle Breite) ---
 sy=440; sh=90
@@ -199,7 +199,8 @@ KB_ROWS=[
   (58, [("<",">"),("y","Y"),("x","X"),("c","C"),("v","V"),("b","B"),("n","N"),("m","M"),(",",";"),(".",":"),("-","_")]),
 ]
 KW,KH,KG=52,52,7; KB_TOP=176; KB_LEFT=M
-FAT_SHIFT={"6":"&","t":"T","u":"U","h":"H"}   # fette Richtungspfeile (Umschalt) – als Gold-Ecke
+FAT_SHIFT={"6":"&","t":"T","u":"U","h":"H",   # fette Pfeile (Umschalt) – als Gold-Ecke; gebogen seit 2.96
+           "2":chr(34),"0":"=","q":"Q","e":"E","o":"O","ü":"Ü","s":"S","ö":"Ö"}
 
 def cap(x,y,active):
     stroke="rgba(160,122,51,.55)" if active else "rgba(20,24,28,.16)"
@@ -278,7 +279,7 @@ def render5():
     keyboard(PF,"base",fat=FAT_SHIFT)        # dünn gross, fett als Gold-Ecke oben rechts (wie im Web)
     txt(K,"Eigener Font ‹Goetheanum Pfeile›: Taste tippen. Der kleine Gold-Pfeil oben rechts = mit Umschalt (fett).",9.5,M,458,"#737a80")
 kbpage("Pfeile & Kompass","Eigener Font ‹Goetheanum Pfeile› – auf normalen Tasten, nicht Option/Alt",render5,
-       "Grund: dünne Pfeile (6 t u h), gebogene (2 0 q e o ü s ö), Kompass (y x c v). Umschalt (Gold-Ecke): fette Pfeile.",
+       "Grund: Pfeile (6 t u h), gebogene (2 0 q e o ü s ö), Kompass (y x c v). Umschalt (Gold-Ecke): fett.",
        "Installieren wie die anderen Schnitte. Web: eingebettet, direkt tippbar – siehe icons.html.")
 open("/tmp/beipack_p5.svg","w").write("".join(S))
 cairosvg.svg2pdf(url="/tmp/beipack_p5.svg",write_to="/tmp/beipack_p5.pdf")

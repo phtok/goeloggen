@@ -194,3 +194,33 @@ Laut 0,72). Bauplan wie empfohlen:
    (U+21B0–21B3, U+2B0E–2B11). Zuordnung: Pfeil-Schrift-Taste 2 (hoch, dann
    rechts) = ↱ usw.; prüfen, dass die schräge Spitze die Bedeutung trägt.
 3. Kompass bleibt nur in der Pfeil-Schrift.
+
+## Bau 2.96 (26. 11. 2026)
+
+![Satzprobe aus den Schriftdateien, heute und 2.96, Klar und Laut, 16 · 20 · 24 px bei 1×, breit](pfeile-296-satzprobe-1280.png) <!-- typo-ok -->
+
+- Schmal (375 px): https://github.com/phtok/goeloggen/blob/main/docs/befunde/pfeile-296-satzprobe-375.png
+- Bau: `tools/goetheanum-fontfix/build_v296.py`, Form `pfeilform.py`, Probe
+  `proof_v296.py` (Chromium, aus den Webfonts, heute aus git)
+
+| | Pfeil-Schrift | Textschrift |
+|---|---|---|
+| Pfeile | 6 t u h, 2 0 q e o ü s ö, Kompass y x c v | ← ↑ → ↓ ↔ ↕ ↖ ↗ ↘ ↙ ↱ ⬎ ↲ ⬑ ↰ ⬏ ↳ ⬐ |
+| Gewicht | Taste = Strich Klar (74), Umschalt = Laut (113) | Strich = Minus des Masters (34 … 120) |
+| fett gebogen | neu: " = Q E O Ü S Ö (Schweiz è é) | – |
+| Codepunkte | 51 (vorher 42) | 685 (vorher 677) |
+
+- **Form.** Eine Kontur je Pfeil, gegen den Uhrzeiger, feste Punktfolge
+  (Variable interpolierbar, `proof_variable_axis.py --alle`: 0 Verstösse);
+  der Bogen ist eine Kurve je Seite, der Verlauf läuft durch ihn hindurch.
+  Die flache Spitze liegt genau am Ende der Länge (Entwurf 5 schnitt sie
+  hinter der Gehrung ab, rund 0,25 × Schaft kürzer).
+- **Zuordnung** Pfeil-Schrift → Unicode: 2 ↱ · 0 ⬎ · q ↲ · e ⬑ · o ↰ · ü ⬏
+  · s ↳ · ö ⬐.
+- **Geprüft:** Konturrichtung Pfeil-Schrift 0 Glyphen (Schnitte unverändert
+  zu 2.94); zweiter Lauf bitgleich; Kompass bitgleich übernommen.
+- **Beobachtet, zur Abnahme:** In der Textschrift tragen die gebogenen Pfeile
+  ihre Bedeutung erst ab rund 20 px; bei 16 px liest sich die 45°-Spitze
+  von ↱ ↰ eher als Haken. Die Unicode-Vorbilder biegen um 90°.
+- **Nicht angefasst:** Icon-Font und Einzeldateien (`pfeil-*.svg/png/pdf`)
+  zeigen die alte Form; die Kursive (2.95) trägt die Pfeile der Pro.
