@@ -18,11 +18,17 @@ Session `session_01T4o46dFfUS14G6XEbxFo2k`; die Folge-Sessions lesen hier.
   - Source Sans 3 statisch, Adobe 3.052R unverändert: Regular, It, Bold,
     BoldIt (Familie «Source Sans 3») und Semibold, SemiboldIt (bei Adobe schon
     eigene Familie «Source Sans 3 Semibold»). Im Installer **Standard**.
-  - **Goetheanum Kyrillisch** (Regular, Bold) aus Titillium Web [RUS],
-    **Goetheanum Arabisch** (Regular, Bold) aus Cairo bei wght 400/700. Nur
+  - **Goetheanum Kyrillisch** (Regular, Bold) aus Titillium Web [RUS]. Nur
     Namen und Stilbits; die überlaufende alte `kern`-Tabelle von Titillium RUS
     fällt weg (Paare stehen im GPOS). Im Installer `-Kyrillisch`/`-Arabisch`
     bzw. `--kyrillisch`/`--arabisch`; schon installierte kommen von selbst mit.
+  - **Goetheanum Arabisch** (27. 11., Etappe A1, `build_arabisch.py`): aus
+    Cairo variabel auf der Hausachse (Flüstern 190 bis Schreien 725, `avar`
+    nach Stamm), fünf Office-Schnitte im Trio wie das Haus: Klar, Laut als
+    Fett, Leise als Kursiv; Ruhig und Deutlich eigene Familien. Die Installer
+    legen die fünf mit `-Arabisch`/`--arabisch` ab, die variable dazu mit
+    `-Variabel`/`--variabel`. Die alten `GoetheanumArabisch-Regular/-Bold.ttf`
+    räumt das Aufräumen ab (Muster `*goetheanum*`).
   - Aufräumen erfasst jede Kopie von Source Sans 3 (auch die variable und die
     fehlerhaft benannte `Fallback/SourceSans3-Regular.ttf`, intern
     «ExtraLight»), Source Sans Pro nicht. Systemweite Source Sans 3 ohne
