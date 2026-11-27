@@ -81,11 +81,16 @@ schon_da goetheanumarabisch && ARABISCH=1
 Begleitschriften/GoetheanumKyrillisch-Regular.ttf
 Begleitschriften/GoetheanumKyrillisch-Bold.ttf"
 [ "$ARABISCH" = 1 ] && SCHRIFTEN="$SCHRIFTEN
-Begleitschriften/GoetheanumArabisch-Regular.ttf
-Begleitschriften/GoetheanumArabisch-Bold.ttf"
+Begleitschriften/GoetheanumArabischKlar.ttf
+Begleitschriften/GoetheanumArabischLaut.ttf
+Begleitschriften/GoetheanumArabischLeise.ttf
+Begleitschriften/GoetheanumArabischRuhig.ttf
+Begleitschriften/GoetheanumArabischDeutlich.ttf"
 [ "$VARIABEL" = 1 ] && SCHRIFTEN="$SCHRIFTEN
 Variable/Goetheanum-Variabel-v$FASSUNG.otf
 Variable/Goetheanum-Kursiv-Variabel-v$FASSUNG.otf"
+[ "$VARIABEL" = 1 ] && [ "$ARABISCH" = 1 ] && SCHRIFTEN="$SCHRIFTEN
+Begleitschriften/GoetheanumArabisch-Variabel.ttf"
 
 melde() { printf '  %s\n' "$1"; }
 halt() { printf '\n  %s\n\n' "$1" >&2; rm -rf "${TMP:-}"; exit "$2"; }

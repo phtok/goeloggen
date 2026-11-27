@@ -95,6 +95,18 @@
       "such": "Serif Antiqua Slab Titillium Pro Serif Probe Zitat Lede Mengentext Sektion Schöne Wissenschaften Treibhaus Labor"
     },
     {
+      "slug": "arabisch-probe",
+      "cat": "treibhaus",
+      "beet": "schrift",
+      "status": "intern",
+      "tag": "Treibhaus",
+      "title": "Goetheanum Arabisch",
+      "short": "Arabisch",
+      "href": "schrift-arabisch-probe.html",
+      "desc": "Goetheanum Arabisch, variabel auf der Achse der Hausschrift: Titel, Lede und Absatz neben Latein, gemischter Satz, sieben Schnitte, Zeichen.",
+      "such": "Arabisch Arabic Cairo Schriftsystem RTL rechts nach links Variable Schwester Probe Treibhaus"
+    },
+    {
       "slug": "lesetest",
       "cat": "treibhaus",
       "status": "intern",

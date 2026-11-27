@@ -1,0 +1,141 @@
+<!doctype html>
+<!-- Treibhaus: Goetheanum Arabisch variabel (Etappe A1,
+     docs/befunde/schriftsysteme-3.0-2026-11-26.md). Font aus
+     tools/goetheanum-fontfix/build_arabisch.py (Cairo, Achse per avar auf die
+     Hausachse 190–725). Das @font-face steht hier lokal, bis der Inhaber über
+     die Aufnahme in tokens.css entscheidet. Arabische Mustertexte: maschinell
+     übersetzt, nicht von Muttersprachlern geprüft. -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Arabisch · Goetheanum</title>
+<meta name="description" content="Goetheanum Arabisch: die arabische Schwester der Hausschrift, variabel auf derselben Achse, neben Latein in den Hausschnitten." />
+<link rel="icon" type="image/svg+xml" href="assets/favicons/kreis-blau/favicon.svg" />
+<link rel="stylesheet" href="design-system/tokens.css" />
+<link rel="stylesheet" href="design-system/base.css" />
+<link rel="stylesheet" href="design-system/nav.css" />
+<style>
+  /* Nur arabische Zeichen aus dieser Datei; Latein bleibt bei der Hausschrift. */
+  @font-face{font-family:"Goetheanum Arabisch";font-weight:190 725;font-style:normal;font-display:swap;
+    unicode-range:U+0600-06FF,U+0750-077F,U+08A0-08FF,U+FB50-FDFF,U+FE70-FEFF,U+200C-200F;
+    src:url("assets/fonts/goetheanum/Webfonts/woff2/GoetheanumArabisch-Variabel.woff2") format("woff2")}
+
+  .hero{padding-block:clamp(40px,7vw,72px) var(--s6)}
+  .hero h1{font-family:var(--font);font-weight:var(--w-deutlich);font-size:clamp(30px,5.2vw,52px);max-width:18ch;text-wrap:balance}
+  .hero .lede{margin-top:var(--s6);color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.55;max-width:58ch;text-wrap:pretty}
+  .sprung{display:flex;flex-wrap:wrap;gap:var(--s2);list-style:none;margin:0;padding:0}
+  .sprung .chip{min-height:var(--tap);display:inline-flex;align-items:center;text-decoration:none}
+
+  .abschnitt{padding-top:var(--s8);scroll-margin-top:calc(var(--header-h) + var(--s4))}
+  .abschnitt h2{text-wrap:balance}
+  .abschnitt > p{max-width:var(--measure);text-wrap:pretty}
+  .paar{display:grid;grid-template-columns:1fr;gap:var(--s7);margin-top:var(--s6)}
+  @media (min-width:900px){.paar{grid-template-columns:1fr 1fr}}
+  .paar > div{min-width:0;border-top:1px solid var(--line);padding-top:var(--s4)}
+  .wer{font-family:var(--font-text);font-size:var(--t-small);font-weight:600;color:var(--muted);margin:0 0 var(--s4)}
+
+  /* Ein Stapel für beide Schriften: Latein aus der Hausschrift, Arabisch aus der Schwester. */
+  .h{font-family:"Goetheanum","Goetheanum Arabisch",var(--font-display);font-synthesis:none}
+  [lang="ar"]{line-height:1.8}
+
+  .gross{font-size:clamp(34px,6vw,64px);line-height:var(--lh-tight);margin:0;text-wrap:balance;font-weight:var(--w-deutlich)}
+  .gross[lang="ar"]{line-height:1.45}
+  .ld{font-size:var(--t-lede);line-height:1.5;margin:var(--s4) 0 0;max-width:var(--measure);text-wrap:balance;font-weight:var(--w-klar)}
+  .txt{font-size:var(--t-body);line-height:var(--lh-body);max-width:var(--measure);margin:var(--s3) 0 0;text-wrap:pretty;font-weight:var(--w-klar)}
+  .kurz{text-wrap:balance}
+  .ld[lang="ar"],.txt[lang="ar"]{line-height:1.9}
+
+  .leiter{display:grid;gap:var(--s3);margin-top:var(--s6)}
+  .leiter div{display:grid;grid-template-columns:1fr;gap:var(--s4);align-items:baseline;border-top:1px solid var(--line);padding-top:var(--s3)}
+  .leiter .px{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);font-variant-numeric:tabular-nums}
+  @media (min-width:600px){.leiter div{grid-template-columns:6.5em 1fr}}
+  .leiter p{margin:0;font-size:clamp(26px,4.4vw,40px);line-height:1.5;white-space:nowrap}
+
+  .abschnitt > .zeichen{max-width:none;font-size:clamp(26px,4vw,40px);line-height:1.9;margin:var(--s4) 0 0;text-wrap:balance;font-weight:var(--w-klar)}
+  .hinweis{font-family:var(--font-text);font-size:var(--t-small);color:var(--muted);margin:var(--s8) 0 0;max-width:var(--measure-text)}
+</style>
+</head>
+<body>
+<script src="design-system/nav.js" data-root="./" data-variant="werkzeug"></script>
+<main class="wrap">
+
+  <section class="hero">
+    <span class="kicker">Treibhaus · Schriften</span>
+    <h1>Goetheanum Arabisch</h1>
+    <p class="lede">Variabel auf der Achse der Hausschrift, von&nbsp;Flüstern bis&nbsp;Schreien. Gleicher Schnitt, gleicher&nbsp;Stamm.</p>
+    <p><a class="btn" href="assets/fonts/goetheanum/Begleitschriften/GoetheanumArabisch-Variabel.ttf" download>Variable Datei laden</a></p>
+  </section>
+
+  <nav aria-label="Abschnitte">
+    <ul class="sprung">
+      <li><a class="chip" href="#titel">Titel</a></li>
+      <li><a class="chip" href="#absatz">Absatz</a></li>
+      <li><a class="chip" href="#mischung">Im&nbsp;Satz</a></li>
+      <li><a class="chip" href="#schnitte">Schnitte</a></li>
+      <li><a class="chip" href="#zeichen">Zeichen</a></li>
+    </ul>
+  </nav>
+
+  <section class="abschnitt" id="titel" aria-labelledby="h-titel">
+    <h2 id="h-titel">Titel</h2>
+    <div class="paar">
+      <div><p class="wer">Deutlich · Latein</p><p class="h gross">Freie Hochschule für&nbsp;Geisteswissenschaft</p></div>
+      <div><p class="wer">Deutlich · Arabisch</p><p class="h gross" lang="ar" dir="rtl">المدرسة الحرة للعلوم الروحية</p></div>
+    </div>
+  </section>
+
+  <section class="abschnitt" id="absatz" aria-labelledby="h-absatz">
+    <h2 id="h-absatz">Lede und Absatz</h2>
+    <div class="paar">
+      <div>
+        <p class="wer">Klar · Latein</p>
+        <p class="h ld">Ein Haus für Tagungen, Bühne und Forschung, offen das ganze&nbsp;Jahr.</p>
+        <p class="h txt">Das Goetheanum in Dornach bei&nbsp;Basel ist Sitz der Allgemeinen Anthroposophischen Gesellschaft und der Freien Hochschule für Geisteswissenschaft. Das ganze Jahr über finden hier Tagungen, Theateraufführungen und Konzerte statt; jedes Jahr kommen Tausende Gäste aus aller&nbsp;Welt.</p>
+      </div>
+      <div>
+        <p class="wer">Klar · Arabisch</p>
+        <p class="h ld" lang="ar" dir="rtl">بيت للمؤتمرات والمسرح والبحث، مفتوح طوال العام.</p>
+        <p class="h txt" lang="ar" dir="rtl">يقع غوتيانوم في دورناخ قرب بازل، وهو مقر الجمعية الأنثروبوسوفية العامة والمدرسة الحرة للعلوم الروحية. تقام فيه على مدار العام مؤتمرات وعروض مسرحية وحفلات موسيقية، ويزوره كل عام آلاف الضيوف من أنحاء العالم.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="abschnitt" id="mischung" aria-labelledby="h-mischung">
+    <h2 id="h-mischung">Im Satz</h2>
+    <div class="paar">
+      <div>
+        <p class="wer">Klar · Latein mit Arabisch</p>
+        <p class="h txt kurz">Das Wort <span lang="ar" dir="rtl">غوتيانوم</span> schreibt sich von rechts nach links; die Tagung <span lang="ar" dir="rtl">الكلمة جسرا</span> beginnt am 12.&nbsp;März.</p>
+      </div>
+      <div>
+        <p class="wer">Klar · Arabisch mit Latein</p>
+        <p class="h txt kurz" lang="ar" dir="rtl">تبدأ الدورة <span lang="de" dir="ltr">Das Wort als Brücke</span> في الثاني عشر من مارس في&nbsp;<span lang="de" dir="ltr">Dornach</span>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="abschnitt" id="schnitte" aria-labelledby="h-schnitte">
+    <h2 id="h-schnitte">Schnitte</h2>
+    <div class="leiter">
+      <div><span class="px">Flüstern 190</span><p class="h" style="font-weight:190">Goetheanum <span lang="ar" dir="rtl">غوتيانوم</span></p></div>
+      <div><span class="px">Leise 265</span><p class="h" style="font-weight:265">Goetheanum <span lang="ar" dir="rtl">غوتيانوم</span></p></div>
+      <div><span class="px">Ruhig 350</span><p class="h" style="font-weight:350">Goetheanum <span lang="ar" dir="rtl">غوتيانوم</span></p></div>
+      <div><span class="px">Klar 440</span><p class="h" style="font-weight:440">Goetheanum <span lang="ar" dir="rtl">غوتيانوم</span></p></div>
+      <div><span class="px">Deutlich 580</span><p class="h" style="font-weight:580">Goetheanum <span lang="ar" dir="rtl">غوتيانوم</span></p></div>
+      <div><span class="px">Laut 680</span><p class="h" style="font-weight:680">Goetheanum <span lang="ar" dir="rtl">غوتيانوم</span></p></div>
+      <div><span class="px">Schreien 725</span><p class="h" style="font-weight:725">Goetheanum <span lang="ar" dir="rtl">غوتيانوم</span></p></div>
+    </div>
+  </section>
+
+  <section class="abschnitt" id="zeichen" aria-labelledby="h-zeichen">
+    <h2 id="h-zeichen">Zeichen</h2>
+    <p class="h zeichen" lang="ar" dir="rtl">ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ل م ن ه و ي</p>
+    <p class="h zeichen" lang="ar" dir="rtl">لا · ببب · ممم · ٠١٢٣٤٥٦٧٨٩ · ، ؛ ؟</p>
+    <p class="hinweis">Arabische Mustertexte maschinell übersetzt, nicht von&nbsp;Muttersprachlern geprüft.</p>
+  </section>
+
+</main>
+</body>
+</html>

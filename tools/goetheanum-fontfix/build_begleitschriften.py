@@ -10,10 +10,10 @@ Erzeugt assets/fonts/goetheanum/Begleitschriften/:
   bilden die Familie «Source Sans 3».
 - Goetheanum Kyrillisch (Regular, Bold) aus Titillium Web [RUS by Daymarius]
   (Fallback/TitilliumRUS-Regular/-Bold.ttf).
-- Goetheanum Arabisch (Regular, Bold) aus Cairo (Fallback/Cairo-Variable.ttf,
-  statisch instanziiert bei wght 400/700, slnt 0).
+- Goetheanum Arabisch: eigener Bau in build_arabisch.py (variabel auf der
+  Hausachse und fünf Office-Schnitte), hier nur aufgerufen.
 
-Bei Kyrillisch und Arabisch wird nur die Namenstabelle in unser System
+Bei Kyrillisch wird nur die Namenstabelle in unser System
 gebracht (Familie, Regular/Bold verbunden) und die OS/2-/head-Stilbits
 gesetzt; Konturen, Metriken und GPOS/GSUB bleiben (die überlaufende alte
 'kern'-Tabelle von Titillium RUS fällt weg, ihre Paare stehen im GPOS). Copyright (nameID 0) und
@@ -36,7 +36,9 @@ import urllib.request
 import zipfile
 
 from fontTools.ttLib import TTFont
-from fontTools.varLib import instancer
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import build_arabisch  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.normpath(os.path.join(HERE, "..", ".."))
@@ -66,11 +68,7 @@ ABLEITUNGEN = {
     },
     "Arabisch": {
         "quelle": "Cairo",
-        "herkunft": (
-            "Goetheanum Arabisch is a renamed static instance of Cairo "
-            "(The Cairo Project Authors, Mohamed Gaber; Latin based on Titillium "
-            "Web), adopted for the Goetheanum fonts. Outlines, metrics and "
-            "features are unchanged. SIL Open Font License 1.1."),
+        "herkunft": build_arabisch.HERKUNFT,
     },
 }
 
@@ -141,19 +139,6 @@ def baue_kyrillisch():
         print("gebaut:", os.path.relpath(ziel, REPO))
 
 
-def baue_arabisch():
-    datei = os.path.join(FALLBACK, "Cairo-Variable.ttf")
-    for stil, wght in (("Regular", 400), ("Bold", 700)):
-        f = TTFont(datei, recalcTimestamp=False)
-        pruefe_frei(f, datei)
-        alt = (f["name"].getDebugName(5) or "").split(";")[0].strip()
-        f = instancer.instantiateVariableFont(f, {"wght": wght, "slnt": 0})
-        benenne(f, "Arabisch", stil, "%s %s" % (ABLEITUNGEN["Arabisch"]["quelle"], alt))
-        ziel = os.path.join(ZIEL, "GoetheanumArabisch-%s.ttf" % stil)
-        f.save(ziel)
-        print("gebaut:", os.path.relpath(ziel, REPO))
-
-
 def hole_source_sans(adobe_zip):
     daten = open(adobe_zip, "rb").read() if adobe_zip else lade(ADOBE_URL)
     if hashlib.sha256(daten).hexdigest() != ADOBE_SHA256:
@@ -198,7 +183,7 @@ def main():
     os.makedirs(ZIEL, exist_ok=True)
     hole_source_sans(args.adobe_zip)
     baue_kyrillisch()
-    baue_arabisch()
+    build_arabisch.main()
     schreibe_ofl()
 
 

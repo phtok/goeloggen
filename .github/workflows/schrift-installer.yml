@@ -69,7 +69,7 @@ jobs:
           Lauf 'kyrillisch' "$env:RUNNER_TEMP\lauf1.log"
           'GoetheanumSchriftKlar.ttf','GoetheanumIcons.ttf','SourceSans3-Regular.ttf',
           'SourceSans3-SemiboldIt.ttf','GoetheanumKyrillisch-Bold.ttf' | ForEach-Object { Da $_ }
-          if (Test-Path "$ordner\GoetheanumArabisch-Regular.ttf") { throw 'Arabisch ohne Wahl installiert' }
+          if (Test-Path "$ordner\GoetheanumArabischKlar.ttf") { throw 'Arabisch ohne Wahl installiert' }
           if (-not (Get-ItemProperty $reg).'Goetheanum Schrift (TrueType)') { throw 'Registry-Eintrag fehlt' }
 
           # Zweiter Lauf ohne Zusatz: ersetzt die Fassung, Kyrillisch bleibt
@@ -113,12 +113,13 @@ jobs:
 
           sudo installer -pkg "$pkg" -target / -applyChoiceChangesXML "$RUNNER_TEMP/wahl.xml"
           for f in GoetheanumSchriftKlar.ttf GoetheanumPfeile.ttf SourceSans3-Regular.ttf \
-                   SourceSans3-SemiboldIt.ttf GoetheanumArabisch-Bold.ttf; do da "$f"; done
+                   SourceSans3-SemiboldIt.ttf GoetheanumArabischLaut.ttf \
+                   GoetheanumArabischLeise.ttf GoetheanumArabischDeutlich.ttf; do da "$f"; done
           if ls /Library/Fonts | grep -qi kyrillisch; then echo 'Kyrillisch ohne Wahl installiert'; exit 1; fi
 
           # Zweiter Lauf ohne Zusatz: ersetzt die Fassung, Arabisch bleibt
           sudo installer -pkg "$pkg" -target /
-          da GoetheanumArabisch-Regular.ttf
+          da GoetheanumArabischKlar.ttf
           da GoetheanumSchriftKlar.ttf
           sudo grep -E 'entfernt: GoetheanumSchriftKlar|Fertig: Goetheanum' /var/log/install.log | tail -4
           echo 'Mac: beide Läufe in Ordnung'

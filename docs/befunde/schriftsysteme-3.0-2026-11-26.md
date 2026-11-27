@@ -99,5 +99,6 @@ Arabisch extra ist sehr gut. Griechisch in Source Sans reicht aus.›
 | Etappe | Inhalt | Ergebnis |
 |---|---|---|
 | A1 | Cairo variabel umbenennen, `avar` auf die Hausachse, fünf statische Schnitte, Installer, `unicode-range` in `tokens.css` | Goetheanum Arabisch variabel, Probe-Seite |
+| | **A1 erledigt (27. 11.)**, ausser `tokens.css`: wartet auf Freigabe des Inhabers. Bau `tools/goetheanum-fontfix/build_arabisch.py`; Probe https://werkzeuge.goetheanum.ch/schrift-arabisch-probe.html | |
 | K1 | 22 Komponenten-Zeichen und Plan der 51 Formen (Upright-Logik für а у), Probe in Klar | Probe-Bild, Entscheid zu den Formen |
 | K2 | 51 Zeichen in sechs Mastern, Kerning, Prüfer (`proof_variable_axis.py --alle`) | Hausschrift 3.0-Kandidat |
