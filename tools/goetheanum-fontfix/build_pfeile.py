@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Baut «Goetheanum Pfeile» — einen eigenen, klein gehaltenen Font nur für die
+"""ABGELÖST seit Fassung 2.96 (build_v296.py, pfeilform.py): nicht mehr laufen lassen.
+
+Baut «Goetheanum Pfeile» — einen eigenen, klein gehaltenen Font nur für die
 Pfeile und den Kompass, abgeleitet aus dem Icon-Font.
 
 Warum ein eigener Font? Die Pfeil-/Kompass-Zeichen liegen im Icon-Font im
