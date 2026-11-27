@@ -16,6 +16,33 @@ Schema je Eintrag: *was · warum · Wirkung (welche Regel/Token/Komponente)*.
 
 ---
 
+## 26. November 2026 — Serif Beta 0.3: einstöckiges a, Entscheide 3.0 (Ergänzung, Version des Systems unverändert)
+
+**Was.** Serif Beta: einstöckiges a als Grundform, zweistöckiges als `ss01`.
+Entscheide zu 3.0: Kyrillisch in die Hausschrift (ganz in die Variable),
+Arabisch als variable Schwesterdatei, Griechisch bleibt bei Source Sans 3.
+**Warum.** Inhaber 26. 11. **Wirkung.** Kein Token; Etappen S2 (Serif
+kräftig), A1 (Arabisch), K1/K2 (Kyrillisch) in
+`docs/befunde/schriftsysteme-3.0-2026-11-26.md` und
+`docs/befunde/serif-probe-2026-10-31.md`.
+
+## 26. November 2026 — Formular: Währung, bedingte Felder allgemein (1.32.0)
+
+**Was.** `formular.js`: Währung wählbar über `[data-rolle="waehrung"]`
+(`.seg`); die Einheit folgt in Legende, Feld, Knopf und Fehlertext über
+`[data-waehrung-text]`; Zahlarten mit `data-waehrungen="CHF"` stehen nur in
+dieser Währung (TWINT). Bedingte Felder allgemein statt nur Adresse: jede
+`.wachsen#id` öffnet ein Kästchen mit `aria-controls="id"` oder eine
+Klappliste mit `aria-controls` und `data-zeigt="<wert>"`; geschlossene Räume
+werden weder geprüft noch übermittelt. `formular.css`: `.gruppe` (Feld und
+bedingter Raum ausserhalb eines `fieldset`, Abstand `--s3`). **Warum.**
+Auftrag des Inhabers 26. 11.: Währung auswählbar, individueller
+Spendenzweck, Abgleich mit goetheanum.io (Institution). **Wirkung.**
+https://werkzeuge.goetheanum.ch/spenden-formular.html: Währung CHF · EUR,
+«Eigener Zweck …» öffnet ein Feld, «Ich spende für eine Institution» öffnet
+«Name der Institution»; Kopf mit Bild und Gruss des Schatzmeisters;
+Akkordeon fest auf den empfohlenen Graden (21/18&nbsp;px), Schalter entfernt.
+
 ## 26. November 2026 — Serif Beta 0.2 für Titel und grosse Grade (Ergänzung, Version des Systems unverändert)
 
 **Was.** Goetheanum Serif Beta 0.2: Akzente für die west- und

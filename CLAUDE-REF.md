@@ -51,9 +51,12 @@ Fassungsnummer).
   `tools/goetheanum-fontfix/build_begleitschriften.py`): Source Sans 3 statisch
   aus Adobe 3.052R, **unverändert und nicht umbenannt** (Entscheid Inhaber
   31. 10. 2026; Reserved Font Name «Source»), im Installer Standard.
-  **Goetheanum Kyrillisch** (aus Titillium Web [RUS]) und **Goetheanum
-  Arabisch** (aus Cairo, statisch 400/700) als Option; nur Namen und Stilbits
-  gesetzt, Copyright und OFL bleiben, Herkunft in nameID 10. Die Installer
+  **Goetheanum Kyrillisch** (aus Titillium Web [RUS]) als Option; nur Namen
+  und Stilbits gesetzt, Copyright und OFL bleiben, Herkunft in nameID 10.
+  **Goetheanum Arabisch** als Option: variabel auf der Hausachse (Cairo,
+  `avar`, `build_arabisch.py`, Flüstern 190 bis Schreien 725) und fünf
+  Office-Schnitte im Trio wie das Haus (Klar, Laut als Fett, Leise als
+  Kursiv; Ruhig und Deutlich eigene Familien). Die Installer
   räumen jede Kopie von Source Sans 3 mit ab, Source Sans Pro nicht.
 
 ## § Werkzeug-Schutz (Supabase-RPCs, Stand 5. 11. 2026)

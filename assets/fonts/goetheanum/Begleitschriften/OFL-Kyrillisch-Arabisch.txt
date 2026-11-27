@@ -9,7 +9,7 @@ Goetheanum Kyrillisch is a renamed version of Titillium Web [RUS by Daymarius] (
 Goetheanum Arabisch – Original Version: Cairo
 Copyright 2009 The Cairo Project Authors (https://github.com/Gue3bara/Cairo)
 
-Goetheanum Arabisch is a renamed static instance of Cairo (The Cairo Project Authors, Mohamed Gaber; Latin based on Titillium Web), adopted for the Goetheanum fonts. Outlines, metrics and features are unchanged. SIL Open Font License 1.1.
+Goetheanum Arabisch is a modified version of Cairo (The Cairo Project Authors, Mohamed Gaber; Latin based on Titillium Web), adopted for the Goetheanum fonts. The slant axis is fixed at 0; the weight axis is remapped by avar to the Goetheanum axis (190-725) so that each Goetheanum weight matches its stem. Outlines, metrics and features are unchanged. SIL Open Font License 1.1.
 
 ===========================================================================
 

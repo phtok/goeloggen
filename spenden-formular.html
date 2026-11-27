@@ -23,12 +23,21 @@
   .wrap>.laborleiste:first-child{margin-top:var(--s6)}
 
   .hero h1{text-wrap:balance}
+  /* Kopf: Gruss des Schatzmeisters neben dem Bild, schmal darunter. */
+  .kopf{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--s6) var(--s8);align-items:center}
+  .kopf .gruss{display:grid;gap:var(--s3);justify-items:start}
+  .kopf .gruss>p:not(.lede){max-width:var(--measure);margin:0}
+  .kopf .lede{margin-top:var(--s2)}
+  .kopf .unterschrift{display:grid;margin-top:var(--s2)}
+  .kopfbild{margin:0;display:grid;gap:var(--s2)}
+  .kopfbild img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;border-radius:var(--r-card);background:var(--soft)}
+  .kopf{margin-bottom:var(--s8)}
+  @media(max-width:860px){.kopf{grid-template-columns:1fr}}
   section.spende{border-top:0;padding-top:0}
 
   /* Akkordeon zu Gast: die Grade der Empfehlung (docs/spenden-befund-2026-10-31.md
      § 4.1) über die Gast-Variablen des Moduls, wie auf goetheanum.io. */
-  .acc-kontext[data-grade="empfohlen"] .acc-liste{--acc-t-frage:1.3125rem;--acc-t-antwort:1.125rem}   /* 21 px / 18 px */
-  .acc-kontext .laborleiste{margin-bottom:var(--s6)}
+  .acc-kontext .acc-liste{--acc-t-frage:1.3125rem;--acc-t-antwort:1.125rem}   /* 21 px / 18 px */
   .acc .zeilen{white-space:pre-line}
 
   /* Kopierbereich: Wahl, Knopf, Rückmeldung, Block (wie akkordeon.html). */
@@ -55,10 +64,20 @@
     </div>
   </div>
 
-  <section class="hero">
-    <span class="kicker">Spenden</span>
-    <h1>Das Goetheanum unterstützen</h1>
-    <p class="lede">Mit Ihrer Spende unterstützen Sie die Arbeit am Goetheanum und schaffen Freiräume für neue Projekte und Initiativen.</p>
+  <section class="hero kopf">
+    <div class="gruss">
+      <span class="kicker">Spenden</span>
+      <h1>Das Goetheanum unterstützen</h1>
+      <p class="lede">Mit Ihrer Spende unterstützen Sie die Arbeit am Goetheanum und schaffen Freiräume für neue Projekte und Initiativen.</p>
+      <p>Sie können direkt online per TWINT, Karte oder PayPal spenden. Wenn Sie ein bestimmtes Projekt oder einen konkreten Zweck unterstützen möchten, geben Sie ihn unten beim Spendenzweck an.</p>
+      <p>Herzlichen Dank für Ihre Unterstützung.</p>
+      <p class="unterschrift">Sebastian&nbsp;Bauer<span class="meta">Schatzmeister</span></p>
+    </div>
+    <figure class="kopfbild">
+      <img src="https://static.goetheanum.io/assets/medias/Goetheanum/_1500xAUTO_crop_center-center_85_none/8O5B8909-Pano.jpg"
+        alt="Das Goetheanum im Schnee unter blauem Himmel" width="1500" height="1128" fetchpriority="high" />
+      <figcaption class="caption">Goetheanum im Winter · Foto:&nbsp;Simon&nbsp;Andreas&nbsp;Peter</figcaption>
+    </figure>
   </section>
 
   <section class="spende" aria-label="Spendenformular">
@@ -83,7 +102,17 @@
       </fieldset>
 
       <fieldset>
-        <legend>Betrag in CHF</legend>
+        <legend>Währung</legend>
+        <div class="seg" role="group" aria-label="Währung" data-rolle="waehrung">
+          <button type="button" data-wert="CHF" aria-pressed="true">CHF</button>
+          <button type="button" data-wert="EUR" aria-pressed="false">EUR</button>
+          <button type="button" data-wert="USD" aria-pressed="false">USD</button>
+          <button type="button" data-wert="GBP" aria-pressed="false">GBP</button>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Betrag in <span data-waehrung-text>CHF</span></legend>
         <div class="seg betrag" role="group" aria-label="Betrag wählen" data-rolle="stufen">
           <button type="button" aria-pressed="false">20</button>
           <button type="button" aria-pressed="true">50</button>
@@ -93,14 +122,14 @@
           <button type="button" aria-pressed="false">1000</button>
         </div>
         <div class="field eigen">
-          <label class="lab" for="betrag">Anderer Betrag in CHF</label>
+          <label class="lab" for="betrag">Anderer Betrag in <span data-waehrung-text>CHF</span></label>
           <div class="einheit">
             <input id="betrag" name="betrag" type="text" inputmode="decimal" autocomplete="transaction-amount" aria-describedby="betrag-fehler"
               data-rolle="betrag" data-min="1"
               data-leer="Wählen Sie einen Betrag oder geben Sie einen eigenen ein."
               data-format="Geben Sie den Betrag als Zahl ein, zum Beispiel 80."
               data-min-text="Der Betrag muss mindestens {min} sein." />
-            <span class="unit" aria-hidden="true">CHF</span>
+            <span class="unit" aria-hidden="true" data-waehrung-text>CHF</span>
           </div>
           <span class="fehler" id="betrag-fehler" hidden></span>
         </div>
@@ -110,14 +139,14 @@
         <legend id="l-zahlart">Zahlungsart</legend>
         <div class="seg" role="group" id="zahlart" aria-labelledby="l-zahlart" aria-describedby="zahlart-fehler zahlart-hinweis"
           data-rolle="zahlart" data-leer="Wählen Sie, wie Sie bezahlen möchten.">
-          <button type="button" data-wert="twint" aria-pressed="false" data-max="5000"
+          <button type="button" data-wert="twint" aria-pressed="false" data-max="5000" data-waehrungen="CHF"
             data-hinweis="Am Telefon öffnet sich die TWINT-App, am Rechner erscheint ein QR&#8209;Code. Danach kommen Sie hierher zurück."
             data-max-hinweis="Mit TWINT gehen höchstens {max}; für mehr eignet sich die QR&#8209;Rechnung.">TWINT</button>
           <button type="button" data-wert="karte" aria-pressed="false"
             data-hinweis="Die Kartenangaben folgen im nächsten Schritt.">Karte</button>
           <button type="button" data-wert="paypal" aria-pressed="false"
             data-hinweis="Sie melden sich bei PayPal an und kommen danach hierher zurück.">PayPal</button>
-          <button type="button" data-wert="rechnung" aria-pressed="false"
+          <button type="button" data-wert="rechnung" aria-pressed="false" data-waehrungen="CHF EUR"
             data-hinweis="Sie erhalten eine QR&#8209;Rechnung per E-Mail und bezahlen im E-Banking.">QR&#8209;Rechnung</button>
         </div>
         <span class="fehler" id="zahlart-fehler" hidden></span>
@@ -126,6 +155,20 @@
 
       <fieldset>
         <legend>Ihre Angaben</legend>
+        <label class="kaestchen">
+          <input type="checkbox" id="institution" name="institution" aria-controls="institution-feld" />
+          <span>Ich spende für eine Institution</span>
+        </label>
+        <div class="wachsen" id="institution-feld">
+          <div class="innen" inert>
+            <div class="field">
+              <label class="lab" for="organisation">Name der Institution</label>
+              <input id="organisation" name="organisation" type="text" autocomplete="organization" aria-describedby="organisation-fehler" required
+                data-leer="Geben Sie den Namen der Institution ein." />
+              <span class="fehler" id="organisation-fehler" hidden></span>
+            </div>
+          </div>
+        </div>
         <div class="formgrid">
           <div class="field">
             <label class="lab" for="vorname">Vorname</label>
@@ -194,12 +237,29 @@
         </div>
       </fieldset>
 
+      <div class="gruppe">
       <div class="field">
         <label class="lab" for="zweck">Spendenzweck</label>
-        <select id="zweck" name="zweck">
+        <select id="zweck" name="zweck" aria-controls="zweck-eigen-feld" data-zeigt="eigen">
           <option value="allgemein">Wo es am nötigsten ist</option>
           <option value="weihnachten">Weihnachtsspende</option>
+          <option value="weltweit">Anthroposophie weltweit</option>
+          <option value="mysteriendramen">Arbeit an den Mysteriendramen</option>
+          <option value="mitgliedsbeitrag">Mitgliedsbeitrag EM Goetheanum</option>
+          <option value="eigen">Eigener Zweck …</option>
         </select>
+      </div>
+      <div class="wachsen" id="zweck-eigen-feld">
+        <div class="innen" inert>
+          <div class="field">
+            <label class="lab" for="zweck-eigen">Wofür ist Ihre Spende bestimmt?</label>
+            <input id="zweck-eigen" name="zweck_eigen" type="text" maxlength="200" aria-describedby="zweck-eigen-hinweis zweck-eigen-fehler" required
+              data-leer="Geben Sie an, wofür Ihre Spende bestimmt ist." />
+            <span class="hint" id="zweck-eigen-hinweis">Ein Projekt, eine Sektion oder ein Anlass.</span>
+            <span class="fehler" id="zweck-eigen-fehler" hidden></span>
+          </div>
+        </div>
+      </div>
       </div>
 
       <div class="abschluss">
@@ -208,6 +268,7 @@
           data-text="Jetzt {betrag} spenden" data-text-monatlich="Jetzt {betrag} monatlich spenden"
           data-text-leer="Jetzt spenden" data-text-warten="Wird übermittelt …"><span>Jetzt <span class="num">50&nbsp;CHF</span> spenden</span></button>
         <p class="hint" data-rolle="kosten">Jede Zahlungsart kostet eine kleine Gebühr, die QR&#8209;Rechnung die kleinste. Die Spendenbescheinigung erhalten Sie, wenn Sie sie oben wählen.</p>
+        <p class="hint">Ihre Angaben verwenden wir nur für diese Spende. <a href="https://www.iubenda.com/privacy-policy/50133166">Datenschutz</a></p>
       </div>
 
       <template class="dank-vorlage">
@@ -222,17 +283,7 @@
     <!-- formular:ende -->
   </section>
 
-  <section class="acc-kontext" data-grade="heute" aria-label="Weitere Wege zu spenden">
-    <div class="laborleiste" role="group" aria-label="Laborschalter Akkordeon">
-      <div class="schalter">
-        <span class="lab" id="l-grade">Grade</span>
-        <div class="seg" role="group" aria-labelledby="l-grade" id="grade">
-          <button type="button" data-wert="heute" aria-pressed="true">wie heute</button>
-          <button type="button" data-wert="empfohlen" aria-pressed="false">wie empfohlen</button>
-        </div>
-      </div>
-    </div>
-
+  <section class="acc-kontext" aria-label="Weitere Wege zu spenden">
     <div class="acc-liste faden"><div class="acc-kopf"><span class="meta"><span class="num">5</span>&nbsp;Themen</span><button class="btn ghost alle" type="button" aria-pressed="false">Alle aufklappen</button></div>
     <details class="acc" id="bankverbindungen">
       <summary>
@@ -363,7 +414,6 @@ document.addEventListener("DOMContentLoaded", function(){
     });
   }
   schalter("vorbelegt", function(w){ ctl.vorbelegt = w; ctl.frequenz(w, true); });
-  schalter("grade", function(w){ document.querySelector(".acc-kontext").dataset.grade = w; });
 });
 </script>
 </body>

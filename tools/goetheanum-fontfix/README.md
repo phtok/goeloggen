@@ -144,10 +144,20 @@ Ziel: 0 FAIL bei den Textschnitten und Icons.
 
 ## Begleitschriften für den Installer (8. 11. 2026)
 Source Sans 3 statisch (Adobe 3.052R, unverändert, per SHA-256 geprüft),
-Goetheanum Kyrillisch (aus Titillium Web [RUS]) und Goetheanum Arabisch (aus
-Cairo, statisch bei wght 400/700). Nur Namen und Stilbits werden gesetzt;
+Goetheanum Kyrillisch (aus Titillium Web [RUS]): nur Namen und Stilbits;
 Herkunft in nameID 10. Zweiter Lauf bitgleich.
+
+**Goetheanum Arabisch** (27. 11. 2026, Etappe A1): `build_arabisch.py`, von
+`build_begleitschriften.py` aufgerufen, auch einzeln lauffähig. Aus Cairo
+variabel: `slnt` bei 0 fest, `wght` per `avar` auf die Hausachse 190–440–725
+(jeder Hausschnitt trifft den Alif-Stamm des gleich kräftigen Haus-l, gemessen
+gleich: Klar 81, Deutlich 107, Laut 126), sieben Named Instances mit
+Hausnamen, STAT neu. Daraus fünf Office-Schnitte im Trio (Klar Regular,
+Laut Fett, Leise Kursiv-Platz; Ruhig, Deutlich eigene Familien) und das
+woff2 für das Web. Shaping (init/medi/fina/rlig, mark/mkmk) bleibt Cairos.
+Zwei Läufe bytegleich.
 ```bash
 python3 build_begleitschriften.py   # lädt das Adobe-ZIP, oder --adobe-zip <Datei>
+python3 build_arabisch.py           # nur Arabisch
 python3 pack_release_zip.py
 ```

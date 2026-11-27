@@ -82,12 +82,18 @@ if ($Kyrillisch) {
   $Schriften['Begleitschriften/GoetheanumKyrillisch-Bold.ttf']    = 'Goetheanum Kyrillisch Bold (TrueType)'
 }
 if ($Arabisch) {
-  $Schriften['Begleitschriften/GoetheanumArabisch-Regular.ttf'] = 'Goetheanum Arabisch (TrueType)'
-  $Schriften['Begleitschriften/GoetheanumArabisch-Bold.ttf']    = 'Goetheanum Arabisch Bold (TrueType)'
+  $Schriften['Begleitschriften/GoetheanumArabischKlar.ttf']     = 'Goetheanum Arabisch (TrueType)'
+  $Schriften['Begleitschriften/GoetheanumArabischLaut.ttf']     = 'Goetheanum Arabisch Bold (TrueType)'
+  $Schriften['Begleitschriften/GoetheanumArabischLeise.ttf']    = 'Goetheanum Arabisch Italic (TrueType)'
+  $Schriften['Begleitschriften/GoetheanumArabischRuhig.ttf']    = 'Goetheanum Arabisch Ruhig (TrueType)'
+  $Schriften['Begleitschriften/GoetheanumArabischDeutlich.ttf'] = 'Goetheanum Arabisch Deutlich (TrueType)'
 }
 if ($Variabel) {
   $Schriften["Variable/Goetheanum-Variabel-v$Fassung.otf"] = 'Goetheanum Variabel (OpenType)'
   $Schriften["Variable/Goetheanum-Kursiv-Variabel-v$Fassung.otf"] = 'Goetheanum Kursiv Variabel (OpenType)'
+  if ($Arabisch) {
+    $Schriften['Begleitschriften/GoetheanumArabisch-Variabel.ttf'] = 'Goetheanum Arabisch Variabel (TrueType)'
+  }
 }
 
 # Programme, die Schriftdateien sperren

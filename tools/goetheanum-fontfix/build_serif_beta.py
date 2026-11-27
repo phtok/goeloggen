@@ -8,7 +8,7 @@
 #     → ä ö ü ë ï ÿ Ä Ö Ü Ë Ï als Komposition, dazu ccmp für i/j + Akzent;
 #   - ß aus der Hausschrift (Klar, Stamm gleich stark: 81 zu 82 Einheiten)
 #     mit dem Fuss-Serif des Serif-h; in der Kursiven geneigt (16°);
-#   - einstöckiges a (ss01) nach Hausschrift-Logik: Bauch des Serif-d, oben
+#   - einstöckiges a als Grundform (seit 0.3), zweistöckiges als ss01: Bauch des Serif-d, oben
 #     die Fahne des Serif-u (wie Klar: a = d ohne Oberlänge);
 #   - leere Akzente der Quelle aus der cmap, damit é & Co. ganz in die
 #     Fallback-Schrift fallen statt den Akzent zu verlieren;
@@ -295,6 +295,21 @@ def kern_fea(pro, italic, cmap, glyphs, adv):
     return "feature kern {\n" + "\n".join(lines) + "\n} kern;"
 
 
+def ss01_fea(glyphs, adv, new):
+    sa, da = glyphs["a"], glyphs["a.ss01"]; n = len(sa.value)
+    sb, db = bounds(sa), bounds(da)
+    dx = ((db[0] + db[2]) - (sb[0] + sb[2])) / 2
+    subs = ["sub a by a.ss01;"]
+    for u, g in sorted(new.items()):
+        d = unicodedata.normalize("NFD", chr(u))
+        if len(d) != 2 or d[0] != "a" or glyphs[g].value[:n] != sa.value: continue
+        mark = RecordingPen(); mark.value = glyphs[g].value[n:]
+        r = RecordingPen(); mark.replay(TransformPen(r, (1, 0, 0, 1, dx, 0)))
+        glyphs[g + ".ss01"] = merge(da, r); adv[g + ".ss01"] = adv["a.ss01"]
+        subs.append(f"sub {g} by {g}.ss01;")
+    return "feature ss01 { " + " ".join(subs) + " } ss01;"
+
+
 def build(style):
     src = TTFont(os.path.join(SRC, f"TitilliumProSerif-{style}.otf"))
     klar = TTFont(KLAR)
@@ -340,6 +355,19 @@ def build(style):
     # Kombinierendes Trema als Glyphe (für Folgen Buchstabe + U+0308).
     glyphs["uni0308"] = dieresis_at((dx0 + dx1) / 2, 0); adv["uni0308"] = 0
 
+    # Einstöckiges a als Grundform, das zweistöckige der Quelle als ss01
+    # (Entscheid des Inhabers 26. 11. 2026: ‹ja einstöckig, das andere nur als
+    # alternate›). Wie Klar (a = d ohne Oberlänge): Stamm des d flach auf Höhe
+    # des Bauch-Scheitels (514) gekappt, keine Fahne. Die Variante mit der
+    # Kopf-Fahne des u las sich im Bild als u (Befund E4). Die Kursive der
+    # Quelle hat schon ein einstöckiges a: dort kein Tausch, kein ss01.
+    if not italic:
+        a1 = rec_of_path(op(path_of(gs, "d"), rect(-50, -50, 700, 514), pathops.PathOp.INTERSECTION))
+        glyphs["a.ss01"] = glyphs["a"]; adv["a.ss01"] = adv["a"]
+        glyphs["a"] = a1; adv["a"] = adv["d"]
+        ab = bounds(a1)
+        anchors["a"] = ((ab[0] + ab[2]) / 2 - 10, anchors.get("a", (0, 500))[1])
+
     new = {}
     for ch in "äöüëïÿÄÖÜËÏ":
         base_ch = unicodedata.normalize("NFD", ch)[0]
@@ -380,17 +408,10 @@ def build(style):
         display_ausbau(PRO, italic, skew, gs, glyphs, adv, cmap, new, markanchor)
 
     feas = []
-    # Einstöckiges a (ss01), nur aufrecht.
-    if not italic:
-        # Wie Klar (a = d ohne Oberlänge): Stamm des d flach auf Höhe des
-        # Bauch-Scheitels (514) gekappt, keine Fahne. Die Variante mit der
-        # Kopf-Fahne des u las sich im Bild als u (Befund E4).
-        a1 = rec_of_path(op(path_of(gs, "d"), rect(-50, -50, 700, 514), pathops.PathOp.INTERSECTION))
-        glyphs["a.ss01"] = a1; adv["a.ss01"] = adv["d"]
-        ab = bounds(a1)
-        glyphs["adieresis.ss01"] = merge(a1, dieresis_at((ab[0] + ab[2]) / 2 - 10, 0))
-        adv["adieresis.ss01"] = adv["d"]
-        feas.append("feature ss01 { sub a by a.ss01; sub adieresis by adieresis.ss01; } ss01;")
+    # ss01: zweistöckiges a samt allen a mit Akzent (Marke um den Mittenversatz
+    # der beiden a verschoben, damit sie über dem Bauch bleibt).
+    if "a.ss01" in glyphs:
+        feas.append(ss01_fea(glyphs, adv, new))
 
     # Leerzeichen-Formen
     glyphs["uni00A0"] = RecordingPen(); adv["uni00A0"] = adv["space"]
@@ -444,7 +465,7 @@ def build(style):
         "fullName": f"{fam} {sub}", "psName": ps,
         "version": f"Version {VERSION} Beta",
         "description": "BETA, Ergänzung zur Goetheanum Schrift für Titel und grosse Grade, nicht im Paket. "
-                       "Aus Titillium Pro Serif version_00 (Chialab, OFL), ergänzt um Trema, ß, einstöckiges a (ss01)"
+                       "Aus Titillium Pro Serif version_00 (Chialab, OFL), ergänzt um Trema, ß, einstöckiges a (zweistöckig als ss01)"
                        + ("; Akzente, Zeichen und Kerning aus Titillium Sans Pro (Chialab, OFL)." if PRO else "."),
         "licenseDescription": "This Font Software is licensed under the SIL Open Font License, Version 1.1.",
         "licenseInfoURL": "https://openfontlicense.org",
@@ -490,7 +511,7 @@ def pack():
 if __name__ == "__main__":
     import sys
     if len(sys.argv) > 1:
-        PRO = sys.argv[1]; VERSION = "0.2"
+        PRO = sys.argv[1]; VERSION = "0.3"
     for s in ("Regular", "RegularItalic"):
         build(s)
     pack()

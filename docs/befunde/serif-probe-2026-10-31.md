@@ -254,6 +254,15 @@ Lesetext. Gebaut ist S1, auf Titel zugeschnitten
 - **Angeschaut** bei 110 px: ‹Ta›, ‹P.›, ‹«Y›, ‹AVA› schliessen; ‹Tú› hält
   105 Einheiten Luft zwischen Arm und Akzent (wie in der Pro).
 
-**Offen, zu entscheiden:** ein zweites Gewicht für Titel neben Deutlich (die
-Quelle hat nur eines; ein eigener Master wäre ein Schriftentwurf), und ob
-`ss01` (einstöckiges a) in der Beta Standard wird.
+## Entscheid des Inhabers (26. 11. 2026) und Fassung 0.3
+
+‹Ja, ein kräftigeres Gewicht der Serif braucht es. Ja einstöckig, das andere
+nur als alternate.›
+
+- **Fassung 0.3 (gebaut):** einstöckiges a als Grundform der Aufrechten,
+  das zweistöckige der Quelle samt à á â ã ä å ā ă ą als `ss01`. Die Kursive
+  der Quelle hat schon ein einstöckiges a, dort kein Tausch.
+- **Offen, eigene Etappe S2:** ein kräftigeres Gewicht (Richtung Deutlich
+  580, Stamm etwa 107). Die Quelle hat nur einen Master; Weg: Fett-Master
+  aus dem Bold der Sans Pro plus Serifen der Beta, oder Konturversatz mit
+  eigener Plattenstärke. Probe zuerst als Bild, dann Entscheid.

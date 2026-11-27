@@ -80,10 +80,25 @@ Office-Paket.
    Empfehlung ja; das ist die kleine Etappe und kann zuerst laufen.
 3. **Griechisch offen lassen?** Empfehlung ja.
 
+## Entscheid des Inhabers (26. 11. 2026)
+
+‹Kyrillisch in die Hausschrift. Wie weit in die Variable integrierbar?
+Arabisch extra ist sehr gut. Griechisch in Source Sans reicht aus.›
+
+- **Kyrillisch:** ja, in die Hausschrift. In die Variable ganz: Jedes neue
+  Zeichen wird in allen sechs Mastern gezeichnet (wie die lateinischen), dann
+  läuft es stufenlos von Flüstern bis Schreien mit, und die fünf statischen
+  Schnitte und Office-TTF entstehen daraus wie heute. Grenze nur dort, wo
+  ein Zeichen nicht in allen Mastern gleich gebaut ist; das prüft
+  `proof_variable_axis.py --alle`.
+- **Arabisch:** als variable Schwesterdatei (Etappe A1).
+- **Griechisch:** Source Sans 3 reicht; keine eigene Zeichnung.
+
 ## Etappen nach Entscheid
 
 | Etappe | Inhalt | Ergebnis |
 |---|---|---|
 | A1 | Cairo variabel umbenennen, `avar` auf die Hausachse, fünf statische Schnitte, Installer, `unicode-range` in `tokens.css` | Goetheanum Arabisch variabel, Probe-Seite |
+| | **A1 erledigt (27. 11.)**, ausser `tokens.css`: wartet auf Freigabe des Inhabers. Bau `tools/goetheanum-fontfix/build_arabisch.py`; Probe https://werkzeuge.goetheanum.ch/schrift-arabisch-probe.html | |
 | K1 | 22 Komponenten-Zeichen und Plan der 51 Formen (Upright-Logik für а у), Probe in Klar | Probe-Bild, Entscheid zu den Formen |
 | K2 | 51 Zeichen in sechs Mastern, Kerning, Prüfer (`proof_variable_axis.py --alle`) | Hausschrift 3.0-Kandidat |
